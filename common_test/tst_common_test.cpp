@@ -16,7 +16,8 @@ public:
 private slots:
     void test_exception_1();
     void test_logging_1();
-
+    void test_logging_2();
+    QString readOneLine(const char *filename);
 };
 
 common_test::common_test() {
@@ -34,21 +35,35 @@ void common_test::test_exception_1() {
     }
 }
 
-void common_test::test_logging_1()  {
-    esi::initlog("testapp.log");
-    qDebug() << "testApp begin to run...";
-
+QString common_test::readOneLine(const char *filename) {
     QScopedPointer<QFile> file;
-    file.reset(new QFile("testapp.log"));
+    file.reset(new QFile(filename));
     if (file.data()->open(QFile::ReadOnly | QFile::Text)) {
         QTextStream in(file.data());
         if (!in.atEnd()) {
-            QString line = in.readLine();
-            QVERIFY(line == "[Debug] testApp begin to run...");
-            return;
+            auto line = in.readLine();
+            return(line);
         }
     }
-    QFAIL("Write log failed.");
+    return(QString(""));
+}
+
+void common_test::test_logging_1()  {
+    esi::initlog("testapp.log", true);
+    esi::setLogLevel(LEVEL_INFO);
+
+    qInfo() << "testApp begin to run...";
+    QString s = readOneLine("testapp.log");
+    QVERIFY(s == "[Info] testApp begin to run...");
+}
+
+void common_test::test_logging_2()  {
+    esi::initlog("testapp.log", true);
+    esi::setLogLevel(LEVEL_DEBUG);
+
+    qDebug() << "testApp begin to run...";
+    QString s = readOneLine("testapp.log");
+    QVERIFY(s == "[Debug] testApp begin to run...");
 }
 
 QTEST_APPLESS_MAIN(common_test)
