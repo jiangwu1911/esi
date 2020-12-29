@@ -4,9 +4,9 @@
 #include <QtCore/qglobal.h>
 
 #if defined(COMMON_LIBRARY)
-#  define COMMON_EXPORT Q_DECL_EXPORT
+    #define COMMON_EXPORT Q_DECL_EXPORT
 #else
-#  define COMMON_EXPORT Q_DECL_IMPORT
+    #define COMMON_EXPORT Q_DECL_IMPORT
 #endif
 
 #endif // COMMON_GLOBAL_H

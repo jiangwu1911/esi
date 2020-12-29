@@ -13,6 +13,7 @@ void setCommonOptions(QCommandLineParser &parser) {
 
 void processCommonOptions(QCommandLineParser &parser) {
     QString logFilename = QCoreApplication::applicationName() + ".log";
+
     if (parser.isSet(logFileOption)) {
         logFilename = parser.value(logFileOption);
     }

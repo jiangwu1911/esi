@@ -4,6 +4,7 @@
 #include "global.h"
 #include "logging.h"
 #include "options.h"
+#include "process.h"
 
 USE_NAMESPACE_ESI
 
@@ -23,6 +24,10 @@ void handleCommandlineOptions(QCoreApplication &app, QCommandLineParser &parser)
     processMgrOptions(parser);
 }
 
+void initApplications() {
+
+}
+
 int main(int argc, char *argv[]) {
 
     QCoreApplication app(argc, argv);
@@ -35,5 +40,7 @@ int main(int argc, char *argv[]) {
     handleCommandlineOptions(app, parser);
 
     qInfo() << QCoreApplication::applicationName() << "begin to run...";
-    return app.exec();
+
+    initDaemon(QCoreApplication::applicationDirPath(), QCoreApplication::applicationName() + ".pid");
+    return 0;
 }

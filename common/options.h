@@ -1,5 +1,5 @@
-#ifndef OPTIONS_HPP
-#define OPTIONS_HPP
+#ifndef OPTIONS_H
+#define OPTIONS_H
 
 #include <QCommandLineOption>
 #include <QCommandLineParser>
@@ -19,4 +19,4 @@ void processCommonOptions(QCommandLineParser &parser);
 
 END_NAMESPACE_ESI
 
-#endif // OPTIONS_HPP
+#endif // OPTIONS_H

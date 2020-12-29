@@ -6,8 +6,7 @@
 
 BEGIN_NAMESPACE_ESI
 
-class Exception : public QException
-{
+class Exception : public QException {
 public:
     explicit Exception(const char *errorString);
     explicit Exception(const QString &errorString);

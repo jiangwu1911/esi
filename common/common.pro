@@ -18,16 +18,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    application.cpp \
     exception.cpp \
     logging.cpp \
-    options.cpp
+    options.cpp \
+    process.cpp
 
 HEADERS += \
+    application.h \
     common_global.h \
     exception.h \
     global.h \
     logging.h \
-    options.h
+    options.h \
+    process.h
 
 # Default rules for deployment.
 unix {

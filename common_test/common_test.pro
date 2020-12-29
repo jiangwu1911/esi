@@ -10,6 +10,7 @@ SOURCES += \
     ../common/exception.cpp \
     ../common/logging.cpp \
     ../common/options.cpp \
+    ../common/process.cpp \
     tst_common_test.cpp
 
 HEADERS += \
@@ -17,6 +18,7 @@ HEADERS += \
     ../common/exception.h \
     ../common/logging.h \
     ../common/options.h \
+    ../common/process.h \
     ../common/global.h
 
 INCLUDEPATH += $$PWD/../common

@@ -31,23 +31,19 @@ Exception::Exception(const Exception &copy)
 Exception::~Exception()
 { }
 
-int Exception::errorCode() const
-{
+int Exception::errorCode() const {
     return m_errorCode;
 }
 
-QString Exception::errorString() const
-{
+QString Exception::errorString() const {
     return m_errorString;
 }
 
-void Exception::raise() const
-{
+void Exception::raise() const {
     throw *this;
 }
 
-Exception *Exception::clone() const
-{
+Exception *Exception::clone() const {
     return new Exception(*this);
 }
 

@@ -10,10 +10,17 @@ BEGIN_NAMESPACE_ESI
 
 void initlog(const QString &filename, const bool clearOldLogs) {
     m_logFile.reset(new QFile(filename));
+    bool success = false;
+
     if (clearOldLogs == true) {
-        m_logFile.data()->open(QFile::WriteOnly | QFile::Text);
+        success = m_logFile.data()->open(QFile::WriteOnly | QFile::Text);
     } else {
-        m_logFile.data()->open(QFile::Append | QFile::Text);
+        success = m_logFile.data()->open(QFile::Append | QFile::Text);
+    }
+
+    if (!success) {
+        std::cerr << "Cannot write log file, quit..." << std::endl;
+        exit(-1);
     }
     qInstallMessageHandler(messageHandler);
 }
