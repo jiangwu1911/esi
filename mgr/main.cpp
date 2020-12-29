@@ -1,35 +1,39 @@
 #include <QCoreApplication>
 #include <QCommandLineParser>
+#include <QDebug>
 #include "global.h"
 #include "logging.h"
+#include "options.h"
 
 USE_NAMESPACE_ESI
 
-const QCommandLineOption logLevelOption("l", "The log level.", "loglevel");
+void setMgrOptions(__attribute__((unused)) QCommandLineParser &parser) {
+}
 
-void initOptions(QCommandLineParser &parser) {
+void processMgrOptions(__attribute__((unused)) QCommandLineParser &parser) {
+}
 
-    parser.setApplicationDescription("Manager");
-    parser.addHelpOption();
-    parser.addVersionOption();
-    parser.addOption(logLevelOption);
+void handleCommandlineOptions(QCoreApplication &app, QCommandLineParser &parser) {
+    setCommonOptions(parser);
+    setMgrOptions(parser);
+
+    parser.process(app);
+
+    processCommonOptions(parser);
+    processMgrOptions(parser);
 }
 
 int main(int argc, char *argv[]) {
-    QCommandLineParser parser;
 
     QCoreApplication app(argc, argv);
     QCoreApplication::setApplicationName("mgr");
     QCoreApplication::setApplicationVersion("0.1");
 
-    initOptions(parser);
-    parser.process(app);
+    QCommandLineParser parser;
+    parser.setApplicationDescription("Manager");
 
-    if (parser.isSet(logLevelOption)) {
-        const QString param = parser.value(logLevelOption);
-        setLogLevel(param.toInt());
-    }
-    initlog("mgr.log");
+    handleCommandlineOptions(app, parser);
 
+    qInfo() << QCoreApplication::applicationName() << "begin to run...";
     return app.exec();
 }

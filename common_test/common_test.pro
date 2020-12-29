@@ -9,12 +9,14 @@ TEMPLATE = app
 SOURCES += \
     ../common/exception.cpp \
     ../common/logging.cpp \
+    ../common/options.cpp \
     tst_common_test.cpp
 
 HEADERS += \
     ../common/common_global.h \
     ../common/exception.h \
     ../common/logging.h \
+    ../common/options.h \
     ../common/global.h
 
 INCLUDEPATH += $$PWD/../common

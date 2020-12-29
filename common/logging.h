@@ -7,8 +7,6 @@
 
 BEGIN_NAMESPACE_ESI
 
-static QScopedPointer<QFile> m_logFile;
-
 #define LEVEL_DEBUG 5
 #define LEVEL_INFO 4
 #define LEVEL_WARNING 3
@@ -16,6 +14,7 @@ static QScopedPointer<QFile> m_logFile;
 #define LEVEL_FATAL 1
 
 static int m_logLevel = LEVEL_INFO;    // qDebug will not write log file by default
+static QScopedPointer<QFile> m_logFile;
 
 void initlog(const QString &logfile, const bool clearOldLogs=false);
 void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &message);

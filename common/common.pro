@@ -19,13 +19,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     exception.cpp \
-    logging.cpp
+    logging.cpp \
+    options.cpp
 
 HEADERS += \
     common_global.h \
     exception.h \
     global.h \
-    logging.h
+    logging.h \
+    options.h
 
 # Default rules for deployment.
 unix {

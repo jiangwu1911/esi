@@ -1,6 +1,8 @@
 #include <QTextStream>
 #include <iostream>
 #include <memory>
+#include <QDebug>
+#include <QDateTime>
 #include "global.h"
 #include "logging.h"
 
@@ -48,7 +50,11 @@ void messageHandler(QtMsgType type, __attribute__((unused)) const QMessageLogCon
     }
 
     if (level <= m_logLevel) {
-        QString text = QString("[%1] %2").arg(levelText);
+        QDateTime curDateTime = QDateTime::currentDateTime();
+
+        QString text = QString("%1 [%2] %3");
+        text = text.arg(curDateTime.toString("yyyy-MM-dd hh:mm:ss"));
+        text = text.arg(levelText);
         text = text.arg(message);
         QTextStream out(m_logFile.data());
         out << text << Qt::endl;
