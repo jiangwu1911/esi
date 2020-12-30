@@ -9,7 +9,8 @@
 BEGIN_NAMESPACE_ESI
 
 void initlog(const QString &filename, const bool clearOldLogs) {
-    m_logFile.reset(new QFile(filename));
+    m_logLevel = LEVEL_INFO;
+    m_logFile.reset(new QFile(filename.simplified()));
     bool success = false;
 
     if (clearOldLogs == true) {

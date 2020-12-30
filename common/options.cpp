@@ -19,7 +19,7 @@ void processCommonOptions(QCommandLineParser &parser) {
     }
     initlog(logFilename);
 
-    int logLevel = LEVEL_INFO;
+    int logLevel = LEVEL_DEBUG;
     if (parser.isSet(logLevelOption)) {
         logLevel = parser.value(logLevelOption).toInt();
     }

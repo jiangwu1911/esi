@@ -6,6 +6,7 @@
 #include <signal.h>
 #include <unistd.h>
 #include <QDebug>
+#include <QThread>
 #include "global.h"
 #include "logging.h"
 #include "process.h"
@@ -70,6 +71,66 @@ void initDaemon(const QString &runningDir, const QString &lockFile) {
     signal(SIGTTIN, SIG_IGN);
     signal(SIGHUP, signalHandler); /* catch hangup signal */
     signal(SIGTERM, signalHandler); /* catch kill signal */
+}
+
+HostProcess::HostProcess(const QString &name)
+    : m_name(name) {
+    m_process = new QProcess(this);
+    m_process->setProcessChannelMode(QProcess::MergedChannels);
+}
+
+HostProcess::~HostProcess() {
+    delete m_process;
+}
+
+qint64 HostProcess::processId() {
+    return m_pid;
+}
+
+QProcess::ProcessState HostProcess::state() {
+    return m_state;
+}
+
+void HostProcess::start(const QString &program, const QStringList &arguments) {
+    connect(m_process, &QProcess::started, this, [this]() {
+        // we to cache the pid in order to have it available after the process crashed
+        m_pid = m_process->processId();
+        qDebug() << "Process" << m_name << "started, pid is" << m_pid;
+    });
+    connect(m_process, &QProcess::errorOccurred, this, [this](QProcess::ProcessError error) {
+        m_error = error;
+        qDebug() << m_name << "error occurred," << m_error;
+    });
+    connect(m_process, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
+    this, [this](int exitCode, QProcess::ExitStatus exitStatus) {
+        m_exitCode = exitCode;
+        m_exitStatus = exitStatus;
+        qDebug() << "Process" << m_name << "exist," << m_exitCode << " " << m_exitStatus;
+    });
+    connect(m_process, &QProcess::stateChanged,
+    this, [this](QProcess::ProcessState newState) {
+        m_state = newState;
+        qDebug() << "Process" << m_name << "state changed to" << m_state;
+    });
+
+    qInfo() << "Try to start sub process: " << program << " " << arguments;
+    m_process->start(program, arguments);
+}
+
+void HostProcess::setWorkingDirectory(const QString &dir) {
+    m_process->setWorkingDirectory(dir);
+}
+
+void HostProcess::setProcessEnvironment(const QProcessEnvironment &environment) {
+    m_process->setProcessEnvironment(environment);
+}
+
+void HostProcess::kill() {
+    m_process->kill();
+}
+
+void HostProcess::terminate() {
+    m_process->terminate();
 }
 
 END_NAMESPACE_ESI
