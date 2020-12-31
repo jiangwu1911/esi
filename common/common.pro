@@ -1,4 +1,4 @@
-QT -= gui
+#QT -= gui
 QT += testlib
 
 TEMPLATE = lib
@@ -21,7 +21,8 @@ SOURCES += \
     exception.cpp \
     logging.cpp \
     options.cpp \
-    process.cpp
+    process.cpp \
+    sharedmemory.cpp
 
 HEADERS += \
     common_global.h \
@@ -29,7 +30,8 @@ HEADERS += \
     global.h \
     logging.h \
     options.h \
-    process.h
+    process.h \
+    sharedmemory.h
 
 # Default rules for deployment.
 unix {

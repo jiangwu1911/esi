@@ -1,11 +1,9 @@
 #include "mainwindow.h"
-
 #include <QApplication>
-#include <QCommandLineParser>
-#include <QDebug>
-#include "sharedmemory.h"
 #include "global.h"
 #include "options.h"
+#include <QDebug>
+#include "sharedmemory.h"
 
 USE_NAMESPACE_ESI
 
@@ -28,11 +26,11 @@ void handleCommandlineOptions(QCoreApplication &app, QCommandLineParser &parser)
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
-    QCoreApplication::setApplicationName("us");
+    QCoreApplication::setApplicationName("img");
     QCoreApplication::setApplicationVersion("0.1");
 
     QCommandLineParser parser;
-    parser.setApplicationDescription("UltraSound");
+    parser.setApplicationDescription("Image process");
     handleCommandlineOptions(app, parser);
     qInfo() << QCoreApplication::applicationName() << "begin to run...";
 

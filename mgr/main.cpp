@@ -7,7 +7,10 @@
 #include "logging.h"
 #include "options.h"
 #include "process.h"
+#include "sharedmemory.h"
+#include "exception.h"
 #include <unistd.h>
+#include <iostream>
 
 USE_NAMESPACE_ESI
 
@@ -29,32 +32,34 @@ void handleCommandlineOptions(QCoreApplication &app, QCommandLineParser &parser)
     processMgrOptions(parser);
 }
 
-void startUsProcess() {
-    HostProcess *usProcess = new HostProcess("us");
-    usProcess->setWorkingDirectory(QCoreApplication::applicationDirPath());
-
-    QString command = "us";
-    QStringList args;
-    args << "-l" << "5"
-         << "-o" << "us.log";
-    usProcess->start(command, args);
-    processList.append(usProcess);
+void initSharedMemory() {
+    SharedMemory *sharedmemory = new SharedMemory();
+    sharedmemory->createAll();
 }
 
-void startTestProcess() {
-    HostProcess *testProcess = new HostProcess("test");
-    testProcess->setWorkingDirectory(QCoreApplication::applicationDirPath());
-
-    QString command = "ls";
-    QStringList args;
-    args << "-l";
-    testProcess->start(command, args);
-    processList.append(testProcess);
-}
+class Application {
+public:
+    QString m_name;
+    QString m_command;
+    QStringList m_args;
+public:
+    Application(const QString &name, const QString &command, const QStringList &args) :
+        m_name(name), m_command(command), m_args(args) {
+    }
+};
 
 void startProcesses() {
-    startTestProcess();
-    startUsProcess();
+    QVector<Application> appList;
+    appList.append(Application("us", "us", QStringList() << "-l" << "5" << "-o" << "us.log"));
+    appList.append(Application("img", "img", QStringList() << "-l" << "5" << "-o" << "img.log"));
+
+    for (int i = 0; i < appList.size(); i++) {
+        Application app = appList.at(i);
+        HostProcess *p = new HostProcess(app.m_name);
+        p->setWorkingDirectory(QCoreApplication::applicationDirPath());
+        p->start(app.m_command, app.m_args);
+        processList.append(p);
+    }
 }
 
 int main(int argc, char *argv[]) {
@@ -67,8 +72,9 @@ int main(int argc, char *argv[]) {
     QCommandLineParser parser;
     parser.setApplicationDescription("Manager");
     handleCommandlineOptions(app, parser);
-
     qInfo() << QCoreApplication::applicationName() << "begin to run...";
+
+    initSharedMemory();
 
     startProcesses();
 

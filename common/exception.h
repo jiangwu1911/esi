@@ -2,11 +2,12 @@
 #define EXCEPTION_H
 
 #include "global.h"
+#include "common_global.h"
 #include <QException>
 
 BEGIN_NAMESPACE_ESI
 
-class Exception : public QException {
+class COMMON_EXPORT Exception : public QException {
 public:
     explicit Exception(const char *errorString);
     explicit Exception(const QString &errorString);

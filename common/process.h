@@ -2,6 +2,7 @@
 #define PROCESS_H
 
 #include "global.h"
+#include "common_global.h"
 #include <QString>
 #include <QObject>
 #include <QProcessEnvironment>
@@ -11,7 +12,7 @@ BEGIN_NAMESPACE_ESI
 void signalHandler(int sig);
 void initDaemon(const QString &runningDir, const QString &lockFile);
 
-class HostProcess : public QObject {
+class COMMON_EXPORT HostProcess : public QObject {
     Q_OBJECT
 
 public:

@@ -8,6 +8,9 @@
 
 BEGIN_NAMESPACE_ESI
 
+int m_logLevel;
+static QScopedPointer<QFile> m_logFile;
+
 void initlog(const QString &filename, const bool clearOldLogs) {
     m_logLevel = LEVEL_INFO;
     m_logFile.reset(new QFile(filename.simplified()));

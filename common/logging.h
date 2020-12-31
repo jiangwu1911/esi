@@ -13,9 +13,6 @@ BEGIN_NAMESPACE_ESI
 #define LEVEL_CRITICAL 2
 #define LEVEL_FATAL 1
 
-static int m_logLevel;    // qDebug will not write log file by default
-static QScopedPointer<QFile> m_logFile;
-
 void initlog(const QString &logfile, const bool clearOldLogs = false);
 void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &message);
 void setLogLevel(int logLevel);

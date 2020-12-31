@@ -15,7 +15,8 @@ SOURCES += \
 HEADERS += \
     mainwindow.h
 
-FORMS +=
+FORMS += \
+    mainwindow.ui
 
 # Default rules for deployment.
 unix {
@@ -26,3 +27,4 @@ unix {
 LIBS += -L$$OUT_PWD/../common/ -lcommon
 INCLUDEPATH += $$PWD/../common
 DEPENDPATH += $$PWD/../common
+
