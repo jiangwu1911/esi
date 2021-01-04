@@ -20,10 +20,12 @@ private:
     QGraphicsScene *imageScene;
     QGraphicsView *imageView;
     QAction *openAction;
+    QAction *sendAction;
 
 private slots:
     void showImage(QString);
     void openImage();
+    int sendMessageToImg();
 };
 
 #endif // MAINWINDOW_H

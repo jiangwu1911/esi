@@ -23,5 +23,6 @@ private:
 private slots:
     void loadImageFromSharedMemory();
     void showImage(const QPixmap &image);
+    Q_SCRIPTABLE QString handleDbusMessage(const QString &message);
 };
 #endif // MAINWINDOW_H

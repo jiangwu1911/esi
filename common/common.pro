@@ -20,6 +20,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     exception.cpp \
     logging.cpp \
+    messageservice.cpp \
     options.cpp \
     process.cpp \
     sharedmemory.cpp
@@ -29,6 +30,7 @@ HEADERS += \
     exception.h \
     global.h \
     logging.h \
+    messageservice.h \
     options.h \
     process.h \
     sharedmemory.h

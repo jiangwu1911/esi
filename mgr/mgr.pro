@@ -1,6 +1,7 @@
 QT -= gui
+QT += dbus
 
-CONFIG += c++11 console
+CONFIG += c++11 console debus
 CONFIG -= app_bundle
 
 # The following define makes your compiler emit warnings if you use

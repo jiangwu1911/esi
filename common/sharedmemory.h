@@ -12,18 +12,25 @@ BEGIN_NAMESPACE_ESI
 
 class COMMON_EXPORT SharedMemory {
 public:
-    SharedMemory();
-    int createAll();
+    SharedMemory(const QString &key);
+
+protected:
+    std::unique_ptr<QSharedMemory> m_memory;
+
+public:
+    int create(const size_t size);
+    int attach();
+};
+
+class COMMON_EXPORT SharedMemoryForImage : public SharedMemory {
+public:
+    SharedMemoryForImage();
     int saveImage(QImage &image);
     int loadImage(QImage &image);
 
-private:
-    QSharedMemory m_memoryForImage;
-    const static size_t IMAGE_AREA_SIZE;
-
-private:
-    int create(QSharedMemory &shm, int size);
-    int attach(QSharedMemory &shm);
+public:
+    const static size_t SIZE;
+    const static QString KEY;
 };
 
 END_NAMESPACE_ESI

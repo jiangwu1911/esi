@@ -4,6 +4,7 @@
 #include "options.h"
 #include <QDebug>
 #include "sharedmemory.h"
+#include "messageservice.h"
 
 USE_NAMESPACE_ESI
 
@@ -32,10 +33,12 @@ int main(int argc, char *argv[]) {
     QCommandLineParser parser;
     parser.setApplicationDescription("Image process");
     handleCommandlineOptions(app, parser);
-    qInfo() << QCoreApplication::applicationName() << "begin to run...";
+    qInfo() << QCoreApplication::applicationName() << "Begin to run...";
 
     MainWindow w;
     w.setWindowTitle(QCoreApplication::applicationName() + " " + QCoreApplication::applicationVersion());
     w.show();
+
+    MessageService messageService{"com.esi.img", &w};
     return app.exec();
 }

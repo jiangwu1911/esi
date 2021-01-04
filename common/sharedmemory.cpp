@@ -6,74 +6,73 @@
 
 BEGIN_NAMESPACE_ESI
 
-const size_t SharedMemory::IMAGE_AREA_SIZE = 1024000;
-
-SharedMemory::SharedMemory() :
-    //m_memoryForImage("EsiImage") {
-    m_memoryForImage("QSharedMemoryExample") {
+SharedMemory::SharedMemory(const QString &key) {
+    m_memory  = std::unique_ptr<QSharedMemory>(new QSharedMemory(key, nullptr));
 }
 
-int SharedMemory::create(QSharedMemory &shm, int size) {
-    QString key = shm.nativeKey();
+int SharedMemory::create(const size_t size) {
+    QString key = m_memory->nativeKey();
     qDebug() << "Shared memory's native key is" << key;
 
-    if (shm.attach()) {
-        // Shared memory already exists
+    if (m_memory->attach()) {
+        qDebug() << "Shared memory" << key << "already exists.";
     } else {
-        if (!shm.create(size)) {
-            qCritical() << shm.error() << shm.errorString();
+        if (!m_memory->create(size)) {
+            qCritical() << m_memory->error() << m_memory->errorString();
             throw Exception("Cannot create shared memory.");
         }
     }
     return(0);
 }
 
-int SharedMemory::createAll() {
-    create(m_memoryForImage, IMAGE_AREA_SIZE);
-    return(0);
-}
-
-int SharedMemory::attach(QSharedMemory &shm) {
-    if (!shm.attach(QSharedMemory::ReadWrite)) {
+int SharedMemory::attach() {
+    if (m_memory->attach(QSharedMemory::ReadWrite)) {
         qWarning() << "Cannot attach shared memory";
-        qWarning() << shm.error() << shm.errorString();
+        qWarning() << m_memory->error() << m_memory->errorString();
         return(-1);
     }
-    qDebug() << "shm attached, size=" << shm.size();
+    qDebug() << "shm attached, size=" << m_memory->size();
     return(0);
 }
 
-int SharedMemory::saveImage(QImage &image) {
+const QString SharedMemoryForImage::KEY = "EsiImage";
+const size_t SharedMemoryForImage::SIZE = 1024000;
+
+SharedMemoryForImage::SharedMemoryForImage() :
+    SharedMemory(SharedMemoryForImage::KEY)
+{}
+
+int SharedMemoryForImage::saveImage(QImage &image) {
     QBuffer buffer;
     buffer.open(QBuffer::ReadWrite);
     QDataStream out(&buffer);
     out << image;
 
-    m_memoryForImage.attach();
-    m_memoryForImage.lock();
+    this->attach();
+    m_memory->lock();
     int size = buffer.size();
     qDebug() << "buffer.size" << size;
-    qDebug() << "m_memoryForImage.size" << m_memoryForImage.size();
+    qDebug() << "m_memory.size" << m_memory->size();
 
-    char *to = (char *)m_memoryForImage.data();
+    char *to = (char *)m_memory->data();
     const char *from = buffer.data().data();
-    memcpy(to, from, qMin(m_memoryForImage.size(), size));
-    m_memoryForImage.unlock();
+    memcpy(to, from, qMin(m_memory->size(), size));
+    m_memory->unlock();
     return 0;
 }
 
-int SharedMemory::loadImage(QImage &image) {
+int SharedMemoryForImage::loadImage(QImage &image) {
     QBuffer buffer;
     QDataStream in(&buffer);
 
-    m_memoryForImage.attach();
-    m_memoryForImage.lock();
-    qDebug() << "m_memoryForImage.size" << m_memoryForImage.size();
+    m_memory->attach();
+    m_memory->lock();
+    qDebug() << "m_memory.size" << m_memory->size();
 
-    buffer.setData((char *)m_memoryForImage.constData(), m_memoryForImage.size());
+    buffer.setData((char *)m_memory->constData(), m_memory->size());
     buffer.open(QBuffer::ReadOnly);
     in >> image;
-    m_memoryForImage.unlock();
+    m_memory->unlock();
     return 0;
 }
 

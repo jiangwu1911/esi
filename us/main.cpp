@@ -34,7 +34,8 @@ int main(int argc, char *argv[]) {
     QCommandLineParser parser;
     parser.setApplicationDescription("UltraSound");
     handleCommandlineOptions(app, parser);
-    qInfo() << QCoreApplication::applicationName() << "begin to run...";
+
+    qInfo() << QCoreApplication::applicationName() << "Begin to run...";
 
     MainWindow w;
     w.setWindowTitle(QCoreApplication::applicationName() + " " + QCoreApplication::applicationVersion());

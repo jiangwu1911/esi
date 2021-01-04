@@ -35,8 +35,8 @@ void MainWindow::createActions() {
 
 void MainWindow::loadImageFromSharedMemory() {
     QImage image;
-    SharedMemory sharedmemory;
-    sharedmemory.loadImage(image);
+    SharedMemoryForImage shm;
+    shm.loadImage(image);
     showImage(QPixmap::fromImage(image));
 }
 
@@ -47,4 +47,9 @@ void MainWindow::showImage(const QPixmap &image) {
     imageScene->addPixmap(image);
     imageScene->update();
     imageView->setSceneRect(image.rect());
+}
+
+Q_SCRIPTABLE QString MainWindow::handleDbusMessage(const QString &message) {
+    qDebug() << "Got a message:" << message;
+    return QString("Message processed.");
 }

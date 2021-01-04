@@ -2,6 +2,7 @@
 #include <QMenuBar>
 #include <QGraphicsView>
 #include <QFileDialog>
+#include <QtDBus/QtDBus>
 #include "sharedmemory.h"
 
 USE_NAMESPACE_ESI
@@ -31,11 +32,30 @@ void MainWindow::createActions() {
     openAction = new QAction("&Open", this);
     fileMenu->addAction(openAction);
     connect(openAction, SIGNAL(triggered(bool)), this, SLOT(openImage()));
+
+    sendAction = new QAction("&Send", this);
+    fileMenu->addAction(sendAction);
+    connect(sendAction, SIGNAL(triggered(bool)), this, SLOT(sendMessageToImg()));
 }
 
 void MainWindow::saveImageToSharedMemory(QImage &image) {
-    SharedMemory sharedmemory;
-    sharedmemory.saveImage(image);
+    SharedMemoryForImage shm;
+    shm.saveImage(image);
+}
+
+int MainWindow::sendMessageToImg() {
+    QDBusInterface iface("com.esi.img", "/", "", QDBusConnection::sessionBus());
+    if (iface.isValid()) {
+        QDBusReply<QString> reply = iface.call("handleMessage", "This is a test.");
+        if (reply.isValid()) {
+            qDebug() << "Reply was:" << reply.value();
+            return 0;
+        }
+        qCritical() << "Call failed:" << reply.error().message();
+        return 1;
+    }
+    qCritical() << QDBusConnection::sessionBus().lastError().message();
+    return 1;
 }
 
 void MainWindow::openImage() {
