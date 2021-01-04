@@ -46,7 +46,7 @@ void MainWindow::saveImageToSharedMemory(QImage &image) {
 int MainWindow::sendMessageToImg() {
     QDBusInterface iface("com.esi.img", "/", "", QDBusConnection::sessionBus());
     if (iface.isValid()) {
-        QDBusReply<QString> reply = iface.call("handleMessage", "This is a test.");
+        QDBusReply<QString> reply = iface.call("handleDbusMessage", "Image saved");
         if (reply.isValid()) {
             qDebug() << "Reply was:" << reply.value();
             return 0;

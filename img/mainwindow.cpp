@@ -51,5 +51,8 @@ void MainWindow::showImage(const QPixmap &image) {
 
 Q_SCRIPTABLE QString MainWindow::handleDbusMessage(const QString &message) {
     qDebug() << "Got a message:" << message;
+    if (message == "Image saved") {
+        this->loadImageFromSharedMemory();
+    }
     return QString("Message processed.");
 }
