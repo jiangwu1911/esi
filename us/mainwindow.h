@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QGraphicsScene>
+#include <QtDBus>
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -26,6 +27,7 @@ private slots:
     void showImage(QString);
     void openImage();
     int sendMessageToImg();
+    void callFinishedSlot(QDBusPendingCallWatcher *call);
 };
 
 #endif // MAINWINDOW_H

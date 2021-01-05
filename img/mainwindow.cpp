@@ -54,5 +54,5 @@ Q_SCRIPTABLE QString MainWindow::handleDbusMessage(const QString &message) {
     if (message == "Image saved") {
         this->loadImageFromSharedMemory();
     }
-    return QString("Message processed.");
+    return QString("Image has been read");
 }

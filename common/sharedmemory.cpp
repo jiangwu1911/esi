@@ -17,7 +17,7 @@ int SharedMemory::create(const size_t size) {
     if (m_memory->attach()) {
         qDebug() << "Shared memory" << key << "already exists.";
     } else {
-        if (m_memory->create(size)) {
+        if (!m_memory->create(size)) {
             qCritical() << m_memory->error() << m_memory->errorString();
             throw Exception("Cannot create shared memory.");
         }
@@ -26,7 +26,7 @@ int SharedMemory::create(const size_t size) {
 }
 
 int SharedMemory::attach() {
-    if (m_memory->attach(QSharedMemory::ReadWrite)) {
+    if (!m_memory->attach(QSharedMemory::ReadWrite)) {
         qWarning() << "Cannot attach shared memory";
         qWarning() << m_memory->error() << m_memory->errorString();
         return(-1);

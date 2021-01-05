@@ -43,19 +43,29 @@ void MainWindow::saveImageToSharedMemory(QImage &image) {
     shm.saveImage(image);
 }
 
+void MainWindow::callFinishedSlot(QDBusPendingCallWatcher *call) {
+    QDBusPendingReply<QString> reply = *call;
+    if (reply.isError()) {
+        qInfo() << "Reply was:" << reply.error().message();
+    } else {
+        qDebug() << "Reply was:" << reply.value();
+    }
+    call->deleteLater();
+}
+
 int MainWindow::sendMessageToImg() {
     QDBusInterface iface("com.esi.img", "/", "", QDBusConnection::sessionBus());
     if (iface.isValid()) {
-        QDBusReply<QString> reply = iface.call("handleDbusMessage", "Image saved");
-        if (reply.isValid()) {
-            qDebug() << "Reply was:" << reply.value();
-            return 0;
-        }
-        qCritical() << "Call failed:" << reply.error().message();
+        QDBusPendingCall async = iface.asyncCall("handleDbusMessage", "Image saved");
+        QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(async, this);
+
+        QObject::connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher *)),
+                         this, SLOT(callFinishedSlot(QDBusPendingCallWatcher *)));
+        return 0;
+    } else {
+        qCritical() << QDBusConnection::sessionBus().lastError().message();
         return 1;
     }
-    qCritical() << QDBusConnection::sessionBus().lastError().message();
-    return 1;
 }
 
 void MainWindow::openImage() {
