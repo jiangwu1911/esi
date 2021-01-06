@@ -52,9 +52,9 @@ void startProcesses() {
 }
 
 int main(int argc, char *argv[]) {
-    QCoreApplication app(argc, argv);
-    initDaemon(QCoreApplication::applicationDirPath(), QCoreApplication::applicationName() + ".pid");
+    initDaemon(get_current_dir_name(), "mgr.pid");
 
+    QCoreApplication app(argc, argv);
     QCoreApplication::setApplicationName("mgr");
     QCoreApplication::setApplicationVersion("0.1");
 
